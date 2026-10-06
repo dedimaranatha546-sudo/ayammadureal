@@ -13,7 +13,7 @@ bot = telebot.TeleBot(TOKEN)
 
 # --- LOAD MODEL TENSORFLOW ---
 # Mengarah ke folder hasil ekstrak file ZIP Anda
-MODEL_PATH = "ei-semoga-berhasil-transfer-learning-tensorflow-savedmodel-model.7" 
+MODEL_PATH = "ei-semoga-berhasil-transfer-learning-tensorflow-savedmodel-model.7"
 
 print("Memuat model TensorFlow...")
 try:
@@ -52,9 +52,9 @@ async def predict(file: UploadFile = File(...)):
         predicted_class_index = np.argmax(scores)
         confidence = float(scores[predicted_class_index])
 
-        # Daftar kelas (Masker, Uang 50rb, Obat)
+        # Daftar kelas sesuai dengan model Edge Impulse Anda
         classes = ["masker", "uang_50rb", "obat"]
-        predicted_label = classes[predicted_class_index]
+        predicted_label = classes[predicted_class_index] if predicted_class_index < len(classes) else "Unknown"
 
         # 4. Kirim hasil notifikasi ke Telegram Anda
         pesan = f"🚨 *Deteksi Objek ESP32-CAM*\n\n- Hasil: *{predicted_label}*\n- Akurasi: {confidence * 100:.2f}%"
