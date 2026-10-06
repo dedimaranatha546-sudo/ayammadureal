@@ -3,6 +3,8 @@ import numpy as np
 import cv2
 import telebot
 import tensorflow as tf
+import zipfile
+import os
 
 app = FastAPI()
 
@@ -11,11 +13,26 @@ TOKEN = "8585090685:AAGDOeoROagyuZYOGXuD35WGg4rARKU1tXw"
 CHAT_ID = "7212316891"
 bot = telebot.TeleBot(TOKEN)
 
-# --- LOAD MODEL TENSORFLOW (Langsung dari direktori utama) ---
+# --- OTOMATIS EKSTRAK ZIP DI SERVER CLOUD ---
+ZIP_FILENAME = "ei-semoga-berhasil-transfer-learning-tensorflow-savedmodel-model.7" # Sesuaikan dengan nama file zip Anda di GitHub
+EXTRACT_PATH = "model_extracted"
+
+print("Mengekstrak file model...")
+try:
+    if os.path.exists(ZIP_FILENAME):
+        with zipfile.ZipFile(ZIP_FILENAME, 'r') as zip_ref:
+            zip_ref.extractall(EXTRACT_PATH)
+        print("File zip berhasil diekstrak!")
+    else:
+        print(f"File {ZIP_FILENAME} tidak ditemukan!")
+except Exception as e:
+    print(f"Gagal ekstrak: {e}")
+
+# --- LOAD MODEL TENSORFLOW ---
 print("Memuat model TensorFlow...")
 try:
-    # Karena file model ditaruh di luar/root bersama main.py, cukup gunakan titik (.)
-    model = tf.saved_model.load(".")
+    # Mengarah ke folder hasil ekstrak otomatis
+    model = tf.saved_model.load(f"{EXTRACT_PATH}/saved_model")
     print("Model berhasil dimuat!")
 except Exception as e:
     print(f"Gagal memuat model: {e}")
