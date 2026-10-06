@@ -1,0 +1,6 @@
+fastapi[standard]
+uvicorn
+tensorflow
+numpy
+opencv-python-headless
+pyTelegramBotAPI
